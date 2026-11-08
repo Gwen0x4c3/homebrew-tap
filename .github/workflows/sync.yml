@@ -1,0 +1,38 @@
+name: Sync
+on:
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-24.04
+    outputs:
+      sha: ${{ steps.commit.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+      - run: python scripts/update.py
+      - name: Check Ruby syntax
+        run: |
+          ruby -c Casks/ego-bridge.rb
+          ruby -c Formula/ego-bridge-agent.rb
+      - name: Commit changed release definitions
+        id: commit
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add Casks Formula
+          if ! git diff --cached --quiet; then
+            git commit -m 'chore: sync ego bridge release'
+            git push
+          fi
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+  test:
+    needs: update
+    uses: ./.github/workflows/test.yml
+    with:
+      ref: ${{ needs.update.outputs.sha }}

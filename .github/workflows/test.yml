@@ -1,0 +1,48 @@
+name: Test packages
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      ref:
+        type: string
+        default: main
+permissions:
+  contents: read
+jobs:
+  install:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, ubuntu-24.04]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref || 'main' }}
+      - uses: Homebrew/actions/setup-homebrew@main
+      - name: Tap the checked-out definitions
+        run: brew tap gwen0x4c3/tap "$PWD"
+      - name: Install Mac App and CLI
+        if: runner.os == 'macOS'
+        run: |
+          brew install --cask --appdir="$RUNNER_TEMP/Applications" gwen0x4c3/tap/ego-bridge
+          "$(brew --prefix)/bin/ego-bridge" --help
+          codesign --verify --deep --strict "$RUNNER_TEMP/Applications/EgoBridge.app"
+      - name: Install Linux CLI and service
+        if: runner.os == 'Linux'
+        run: |
+          brew install gwen0x4c3/tap/ego-bridge-agent
+          brew test gwen0x4c3/tap/ego-bridge-agent
+          export EGO_AGENT_CONF="$RUNNER_TEMP/service-test"
+          export EGO_BRIDGE_CONFIG="$RUNNER_TEMP/shim.json"
+          export EGO_BRIDGE_PORT=3348
+          ego-agent-service --bind 127.0.0.1 --port 3348 >"$RUNNER_TEMP/service.log" 2>&1 &
+          service_pid=$!
+          trap 'kill "$service_pid"' EXIT
+          for attempt in {1..100}; do
+            grep -q '"ev": "listening"' "$RUNNER_TEMP/service.log" && break
+            sleep 0.1
+          done
+          grep -q '"ev": "listening"' "$RUNNER_TEMP/service.log"
+          ego-browser pair > "$RUNNER_TEMP/pair.txt"
+          grep -Eq '[a-z2-9]{4}-[a-z2-9]{4}' "$RUNNER_TEMP/pair.txt"
