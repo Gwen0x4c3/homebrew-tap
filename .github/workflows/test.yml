@@ -47,6 +47,7 @@ jobs:
         run: |
           brew install --cask --appdir="$RUNNER_TEMP/Applications" gwen0x4c3/tap/ego-bridge
           "$(brew --prefix)/bin/ego-bridge" --help
+          "$(brew --prefix)/bin/ego-bridge" setup --help
           codesign --verify --deep --strict "$RUNNER_TEMP/Applications/EgoBridge.app"
       - name: Install Linux CLI and service
         if: runner.os == 'Linux'

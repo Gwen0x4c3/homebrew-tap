@@ -1,8 +1,8 @@
 class EgoBridgeAgent < Formula
   desc "Linux service and CLI for the ego bridge remote browser"
   homepage "https://github.com/gwen0x4c3/ego-bridge"
-  url "https://github.com/gwen0x4c3/ego-bridge/releases/download/v2.3.0/ego-bridge-v2.3.0-linux.tar.gz"
-  sha256 "76cb0c1fbd119ea818079a46d6b8ffdac7a2ef299cd4dc73af207eca82e5b5e8"
+  url "https://github.com/gwen0x4c3/ego-bridge/releases/download/v2.4.0/ego-bridge-v2.4.0-linux.tar.gz"
+  sha256 "147625c0af616df9638b935190770a00d7981ffcb3dc918b877fae1e766c2e0b"
   license "MIT"
 
   depends_on :linux

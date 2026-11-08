@@ -1,9 +1,9 @@
 cask "ego-bridge" do
   arch arm: "arm64", intel: "x86_64"
 
-  version "2.3.0"
-  sha256 arm: "02a5f588391217536d1ba59c1080e9adfef837814ea6a5d06ecc9fc0505ba2c1",
-         intel: "cf80b343dff19431ccbd4a6d77d682a81035cd8a71d6460e13973c33aec4517a"
+  version "2.4.0"
+  sha256 arm: "55e4c6b023c717a1128e896af99373b0dbc9bfa341fecb657dca6915fc744a1f",
+         intel: "314f2d1a0819a4db2d9cbb0df47dbb92f43a77f0e24c316bac21bafa0762a0b7"
 
   url "https://github.com/gwen0x4c3/ego-bridge/releases/download/v#{version}/ego-bridge-v#{version}-macos-#{arch}.zip"
   name "ego bridge"
