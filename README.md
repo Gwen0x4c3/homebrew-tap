@@ -5,6 +5,9 @@ Prebuilt [ego bridge](https://github.com/gwen0x4c3/ego-bridge) packages. No Swif
 ## Mac: App + control CLI
 
 ```bash
+brew tap gwen0x4c3/tap
+# Homebrew 7: one-time trust for this package
+brew trust --cask gwen0x4c3/tap/ego-bridge
 brew install --cask gwen0x4c3/tap/ego-bridge
 open -a EgoBridge
 ```
@@ -16,6 +19,8 @@ Quit an older running App before upgrading or migrating from a source installati
 ## Linux: agent service + browser CLI
 
 ```bash
+brew tap gwen0x4c3/tap
+brew trust --formula gwen0x4c3/tap/ego-bridge-agent
 brew install gwen0x4c3/tap/ego-bridge-agent
 brew services start gwen0x4c3/tap/ego-bridge-agent
 ego-browser pair

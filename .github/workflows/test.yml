@@ -21,7 +21,15 @@ jobs:
           ref: ${{ inputs.ref || 'main' }}
       - uses: Homebrew/actions/setup-homebrew@main
       - name: Tap the checked-out definitions
-        run: brew tap gwen0x4c3/tap "$PWD"
+        run: |
+          brew tap gwen0x4c3/tap "$PWD"
+          if brew help trust >/dev/null 2>&1; then
+            if [[ "$RUNNER_OS" == macOS ]]; then
+              brew trust --cask gwen0x4c3/tap/ego-bridge
+            else
+              brew trust --formula gwen0x4c3/tap/ego-bridge-agent
+            fi
+          fi
       - name: Install Mac App and CLI
         if: runner.os == 'macOS'
         run: |
